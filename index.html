@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+        crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/reset.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container-fluid instructions">
+        <h1 id="game-title-header" class="display-2">The Crystal Game !!</h1>
+        <div class="container mt-5">
+            <p class="rule">
+                You will be given a random number at the start of the game
+            </p>
+            <br>
+            <p class="rule">
+                There are four crystals below. By clicking on a crystal you will add a specific amount to your total score
+            </p>
+            <br>
+            <p class="rule">
+                You win by matching your total score to a random number. You lose the game if your score goes above the random number.
+            </p>
+            <br>
+            <p class="rule">
+                The value of each crystal is hidden from you until you click on it
+            </p>
+            <br>
+            <p class="rule">
+                Each time the game starts the random number and crystal values will be changed
+            </p>
+        </div>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-2">
+                    Target Score:
+                    <h1 id="target" class="display-3">0</h1>
+                </div>
+                <div class="col-4">
+                    My Total Score:
+                    <h1 id="myScore" class="display-3">0</h1>
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-4">
+                    Wins:
+                    <h3 id="wins" class="display-4"></h3>
+                    <hr> Losses:
+                    <h3 id="losses" class="display-4"></h3>
+                </div>
+            </div>
+        </div>
+        <br/></br>
+        <div class="container">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-2">
+                    <button id="gemOneButton" type="button" class="gem-button">
+                        <img class="gem" src="./assets/images/crystal.jpg" />
+                    </button>
+                </div>
+                <div class="col-2">
+                    <button id="gemTwoButton" type="button" class="gem-button">
+                        <img class="gem" src="./assets/images/crystal.jpg" />
+                    </button>
+                </div>
+                <div class="col-2">
+                    <button id="gemThreeButton" type="button" class="gem-button">
+                        <img class="gem" src="./assets/images/crystal.jpg" />
+                    </button>
+                </div>
+                <div class="col-2">
+                    <button id="gemFourButton" type="button" class="gem-button">
+                        <img class="gem" src="./assets/images/crystal.jpg" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <script>
+            var wins = 0;
+            var losses = 0;
+            var myScore = 0;
+            var gemOneValue = 0;
+            var gemTwoValue = 0;
+            var gemThreeValue = 0;
+            var gemFourValue = 0;
+            var target = 0;
+            $(document).ready(function () {
+                $("#gemOneButton").click(function () {
+                    addToScore(gemOneValue);
+                });
+                $("#gemTwoButton").click(function () {
+                    addToScore(gemTwoValue);
+                });
+                $("#gemThreeButton").click(function () {
+                    addToScore(gemThreeValue);
+                });
+                $("#gemFourButton").click(function () {
+                    addToScore(gemFourValue);
+                });
+                setupNumbers();
+            });
+            function addToScore(someValue) {
+                myScore += someValue;
+                $("#myScore").text(myScore);
+                checkScore();
+            }
+            
+            function setupNumbers() {
+                pickedNumbers = [];
+                gemOneValue = random(1, 12);
+                gemTwoValue = random(1, 12);
+                gemThreeValue = random(1, 12);
+                gemFourValue = random(1, 12);
+                target = random(19, 120);
+                myScore = 0;
+                $("#myScore").text(myScore);
+                $("#wins").text(wins);
+                $("#losses").text(losses);
+                $("#target").text(target);
+            }
+            function random(min, max){
+                var num = Math.floor(Math.random() * (max - min + 1)) + min;
+                var valid = validateNumber(num);
+                if(valid) {
+                    return num;
+                } else {
+                     return random(min, max);
+                }
+            }
+            function validateNumber(num){
+                if(pickedNumbers.includes(num)) {
+                   return false
+                } else {
+                    pickedNumbers.push(num);
+                    return true
+                }
+            }
+            function checkScore() {
+                if (myScore === target) {
+                    wins += 1;
+                    setupNumbers();
+                }
+                if (myScore > target) {
+                    losses += 1;
+                    setupNumbers();
+                }
+            }
+        </script>
+    </div>
+</body>
+
+</html>
